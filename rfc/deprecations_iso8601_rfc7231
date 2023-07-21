@@ -1,45 +1,24 @@
-====== PHP RFC: Deprecations of constants ISO_8601 and RFC7231 ======
+====== PHP RFC: Deprecations of constants ISO8601 and RFC7231 ======
   * Date: x
   * Author: Jorg Sowa <jorg.sowa@gmail.com>
   * Status: In Draft
 
 ===== Introduction =====
 
-The RFC proposes to deprecate the listed functionality in PHP 8.1 and remove it in PHP 9.
+The RFC proposes to deprecate the date constants referring to the format ISO8601 and RFC7231.
 
-The following list provides a short overview of the functionality targeted for deprecation, while more detailed explanation is provided in the Proposal section:
-
-  * ''date_sunrise()'' and ''date_sunset()''
-  * ''key()'', ''current()'', ''next()'', ''prev()'', and ''reset()'' on objects
-  * ''mb_check_encoding()'' without argument
-  * ''get_class()'', ''get_parent_class()'' and ''get_called_class()'' without argument
-  * ''FILE_BINARY'' and ''FILE_TEXT'' constants
-  * ''t'' fopen mode
-  * Passing bool for ''$value'' argument of ''IntlCalendar::roll()''
-  * Accessing static members on traits
-  * ''strptime()''
-  * ''strftime()'' and ''gmtstrftime()''
-  * ''mhash*()'' function family
-  * ''ctype_*()'' function family accepts ''int'' parameters
-  * Return by reference with void type
-  * NIL constant defined by the IMAP extension
-  * Calling overloaded pgsql functions without the connection argument
-  * ''$num_points'' parameter of ''image(open|filled)polygon''
-  * ''mysqli::init()''
-  * ''filter.default'' ini setting
-  * ''auto_detect_line_endings'' ini setting
-  * ''ssl_method'' option to ''SoapClient'' constructor
-  * ''FILTER_SANITIZE_STRING''
-  * ''oci8.old_oci_close_semantics'' ini setting
-  * ''odbc_result_all()''
+  * ''DATE_ISO8601''
+  * ''DateTimeInterface::ISO8601''
+  * ''DATE_RFC7231''
+  * ''DateTimeInterface::RFC7231''
 
 ===== Proposal =====
 
-Each feature proposed for deprecation is voted separately and requires a 2/3 majority. All votes refer to deprecation in PHP 8.1 and removal in PHP 9.0.
+Both formats proposed for deprecation are voted separately and require a 2/3 majority. Votes for RFC7231 refer to deprecation in next minor PHP version and removal in PHP 9.0. Votes for ISO8601 refer to deprecation in next minor PHP version and removal in PHP 9.0 or PHP 10.0 which is also voted on.
 
-Voting started on 2021-06-30 and ends on 2021-07-14.
+Voting started on x and ends on x.
 
-==== date_sunrise() and date_sunset() ====
+==== Format ISO8601 ====
 
 These two functions have the signature:
 
