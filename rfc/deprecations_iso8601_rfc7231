@@ -1,0 +1,78 @@
+====== PHP RFC: Deprecations of constants ISO_8601 and RFC7231 ======
+  * Date: x
+  * Author: Jorg Sowa <jorg.sowa@gmail.com>
+  * Status: In Draft
+
+===== Introduction =====
+
+The RFC proposes to deprecate the listed functionality in PHP 8.1 and remove it in PHP 9.
+
+The following list provides a short overview of the functionality targeted for deprecation, while more detailed explanation is provided in the Proposal section:
+
+  * ''date_sunrise()'' and ''date_sunset()''
+  * ''key()'', ''current()'', ''next()'', ''prev()'', and ''reset()'' on objects
+  * ''mb_check_encoding()'' without argument
+  * ''get_class()'', ''get_parent_class()'' and ''get_called_class()'' without argument
+  * ''FILE_BINARY'' and ''FILE_TEXT'' constants
+  * ''t'' fopen mode
+  * Passing bool for ''$value'' argument of ''IntlCalendar::roll()''
+  * Accessing static members on traits
+  * ''strptime()''
+  * ''strftime()'' and ''gmtstrftime()''
+  * ''mhash*()'' function family
+  * ''ctype_*()'' function family accepts ''int'' parameters
+  * Return by reference with void type
+  * NIL constant defined by the IMAP extension
+  * Calling overloaded pgsql functions without the connection argument
+  * ''$num_points'' parameter of ''image(open|filled)polygon''
+  * ''mysqli::init()''
+  * ''filter.default'' ini setting
+  * ''auto_detect_line_endings'' ini setting
+  * ''ssl_method'' option to ''SoapClient'' constructor
+  * ''FILTER_SANITIZE_STRING''
+  * ''oci8.old_oci_close_semantics'' ini setting
+  * ''odbc_result_all()''
+
+===== Proposal =====
+
+Each feature proposed for deprecation is voted separately and requires a 2/3 majority. All votes refer to deprecation in PHP 8.1 and removal in PHP 9.0.
+
+Voting started on 2021-06-30 and ends on 2021-07-14.
+
+==== date_sunrise() and date_sunset() ====
+
+These two functions have the signature:
+
+<PHP>
+function date_sunset(
+    int $timestamp,
+    int $format = SUNFUNCS_RET_STRING,
+    float $latitude = ini_get("date.default_latitude"),
+    float $longitude = ini_get("date.default_longitude"),
+    float $zenith = ini_get("date.sunset_zenith"),
+    float $gmt_offset = 0
+): mixed;
+</PHP>
+
+This function depends on ini settings that specify the "default" latitude and longitude, a concept that makes very little sense. Additionally it requires familiarity with appropriate zenith values to use for different purposes.
+
+''date_sunset()'' and ''date_sunrise()'' have since been superseded by ''date_sun_info()'':
+
+<PHP>
+function date_sun_info(int $time, float $latitude, float $longitude): array;
+</PHP>
+
+This function does not use "default" latitude and longitude, and returns an associative array of multiple different definitions of the sunrise/sunset concept.
+
+The proposal is to deprecate ''date_sunset()'' and ''date_sunrise()'' in favor of ''date_sun_info()''. The ini settings ''date.default_latitude'', ''date.default_longitude'' and ''date.sunset_zenith'' are marked as deprecated in the documentation. In the next major version, both the functions and the ini settings will be removed.
+This was initially discussed in: https://github.com/php/php-src/pull/4423.
+
+<doodle title="Deprecate date_sunrise() and date_sunset()?" auth="nikic" voteType="single" closed="true">
+   * Yes
+   * No
+</doodle>
+
+===== Backward Incompatible Changes =====
+
+For PHP 8.x additional deprecation notices will appear. For PHP X the previously deprecated functionality will no longer be available.
+response headers, instead of creating a variable?
