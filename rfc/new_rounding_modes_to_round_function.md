@@ -2,19 +2,20 @@
   * Date: 2023-08-31
   * Target version: PHP 8.4
   * Author: Jorg Sowa <jorg.sowa@gmail.com>
-  * Status: In Discussion
+  * Status: Under Discussion
   * Implementation: https://github.com/php/php-src/pull/12056
+  * First Published at: http://wiki.php.net/rfc/new_rounding_modes_to_round_function
 
 ===== Introduction =====
 
 The RFC proposes to add 4 new modes to the round() function.
 
-- [[https://en.wikipedia.org/wiki/Principle_of_least_astonishment|PHP_ROUND_CEILING]],
-- [[https://en.wikipedia.org/wiki/Rounding#Rounding_down|PHP_ROUND_FLOOR]],
-- [[https://en.wikipedia.org/wiki/Rounding#Rounding_away_from_zero|PHP_ROUND_AWAY_FROM_ZERO]],
-- [[https://en.wikipedia.org/wiki/Rounding#Rounding_down|PHP_ROUND_TOWARD_ZERO]].
+  * [[https://en.wikipedia.org/wiki/Principle_of_least_astonishment|PHP_ROUND_CEILING]],
+  * [[https://en.wikipedia.org/wiki/Rounding#Rounding_down|PHP_ROUND_FLOOR]],
+  * [[https://en.wikipedia.org/wiki/Rounding#Rounding_away_from_zero|PHP_ROUND_AWAY_FROM_ZERO]],
+  * [[https://en.wikipedia.org/wiki/Rounding#Rounding_down|PHP_ROUND_TOWARD_ZERO]].
 
-Two first comments on the documentation page of the round() function are related to the missing modes of rounding. The first comment has a outstanding 309 votes.
+Two first comments on the documentation page of the round() function are related to the missing modes of rounding. The first comment has an outstanding number of 309 votes.
 
 Moreover, the [[https://www.php.net/manual/en/class.numberformatter.php|NumberFormatter]] already implements 4 new proposed modes known as ROUND_CEILING, ROUND_FLOOR, ROUND_DOWN, ROUND_UP.
 
@@ -22,10 +23,10 @@ Moreover, the [[https://www.php.net/manual/en/class.numberformatter.php|NumberFo
 
 Adding 4 new constants for the rounding modes of function round():
 
-- PHP_ROUND_CEILING,
-- PHP_ROUND_FLOOR,
-- PHP_ROUND_AWAY_FROM_ZERO,
-- PHP_ROUND_TOWARD_ZERO. 
+  * PHP_ROUND_CEILING - rounds num to the nearest integer bigger than num,
+  * PHP_ROUND_FLOOR - rounds num to the nearest integer lower than num,
+  * PHP_ROUND_AWAY_FROM_ZERO - rounds num away from zero,
+  * PHP_ROUND_TOWARD_ZERO - rounds num towards zero. 
 
 ===== Backward Incompatible Changes =====
 
@@ -47,10 +48,12 @@ Such constants already exist in the NumberFormatter and represent rounding modes
 As per the voting RFC a yes/no vote with a 2/3 majority is needed for this proposal to be accepted.
 
 Voting started on 2023-09-x and will end on 2023-09-x.
-<doodle title="Add 4 new rounding modes to function round()?" auth="jorgsowa" voteType="single">
-   * Yes
-   * No
-</doodle>
 
 ===== Implementation =====
 GitHub pull request: https://github.com/php/php-src/pull/12056
+
+===== References =====
+Links to external references, discussions or RFCs
+
+===== Rejected Features =====
+Keep this updated with features that were discussed on the mail lists.
