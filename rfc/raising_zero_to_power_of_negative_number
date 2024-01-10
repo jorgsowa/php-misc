@@ -1,4 +1,4 @@
-====== PHP RFC: Invalidate raising zero to negative exponent ======
+====== PHP RFC: Invalidate raising zero to power of negative number ======
   * Version: 1.0
   * Date: 2013-02-24 (use today's date here)
   * Author: Jorg Sowa <jorg.sowa@gmail.com>, Ilija Tovilo (tovilo.ilija@gmail.com)
@@ -6,9 +6,9 @@
   * First Published at: http://wiki.php.net/rfc/raising_zero_to_negative_exponent
 
 ===== Introduction =====
-Raising a number to a negative power is equivalent to taking the reciprocal of the number raised to the positive opposite of the power.
+Raising a number to power of negative number is equivalent to taking the reciprocal of the number raised to the positive opposite of the power.
 
-If we raise the number zero to a negative exponent we end up with the one divided by zero, which gives an undefined result. Currently in PHP, such operation results in `INF`, while explicit division by zero gives an Error.
+If we raise the number zero to power of negative number we end up with the one divided by zero, which gives an undefined result. Currently in PHP, such operation results in `INF`, while explicit division by zero gives an DivisionByZeroError.
 
 <code php>
 var_dump(0 ** -1); //float(INF)
