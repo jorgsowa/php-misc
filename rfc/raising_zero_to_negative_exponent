@@ -6,22 +6,21 @@
   * First Published at: http://wiki.php.net/rfc/raising_zero_to_negative_exponent
 
 ===== Introduction =====
-Raising a number to a negative power in mathematics is equal to one over the number raised to the positive opposite of power.
+Raising a number to a negative power is equivalent to taking the reciprocal of the number raised to the positive opposite of the power.
 
-So if we raise the number zero to a negative exponent we end up with the one divided by zero, which is an undefined result. Currently in PHP, such operation results in `INF`.
+If we raise the number zero to a negative exponent we end up with the one divided by zero, which is an undefined result. Currently in PHP, such operation results in `INF`, while explicit division by zero results in Error.
 
 <code php>
 var_dump(0 ** -1); //float(INF)
 
 var_dump(pow(0,-1)); //float(INF)
+
+var_dump(1/0); //DivisionByZeroError: Division by zero
+
 </code>
 
 ===== Proposal =====
 The RFC proposes to change the behavior of this operation. In the next minor version such an operation will throw a Deprecation notice, and for the major version, this operation will throw DivisionByZeroError, which matches the division by zero operation.
-
-<code php>
-var_dump(1/0); //DivisionByZeroError: Division by zero
-</code>
 
 ===== Backward Incompatible Changes =====
 This change will break all code including raising the zero number to a negative power.
