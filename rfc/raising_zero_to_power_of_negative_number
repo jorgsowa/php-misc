@@ -1,4 +1,4 @@
-====== PHP RFC: Invalidate raising zero to power of negative number ======
+====== PHP RFC: Raising zero to power of negative number ======
   * Version: 1.0
   * Date: 2013-02-24 (use today's date here)
   * Author: Jorg Sowa <jorg.sowa@gmail.com>, Ilija Tovilo (tovilo.ilija@gmail.com)
