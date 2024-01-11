@@ -3,7 +3,7 @@
   * Date: 2013-02-24 (use today's date here)
   * Author: Jorg Sowa <jorg.sowa@gmail.com>
   * Status: Draft
-  * First Published at: http://wiki.php.net/rfc/raising_zero_to_negative_exponent
+  * First Published at: http://wiki.php.net/rfc/raising_zero_to_power_of_negative_number
 
 ===== Introduction =====
 Raising a number to the power of a negative number is equivalent to taking the reciprocal of the number raised to the positive opposite of the power.
