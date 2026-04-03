@@ -25,8 +25,6 @@ Session fixation allows an attacker to pre-plant a known session ID and wait for
 
 With ''use_strict_mode=1'', ''php_session_initialize()'' calls ''s_validate_sid()'' on the proposed ID before accepting it. The built-in files handler checks whether a session file for that ID exists on disk; because an attacker-planted ID has no corresponding file, a fresh random ID is generated instead.
 
-''use_strict_mode'' was added in PHP 5.5.2. The [[https://www.php.net/manual/en/session.security.ini.php|PHP manual]] has recommended enabling it since PHP 7.1.
-
 ==== JavaScript Cookie Access (cookie_httponly) ====
 
 The ''[[https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#httponly|HttpOnly]]'' cookie attribute, defined in [[https://www.rfc-editor.org/rfc/rfc6265#section-4.1.2.6|RFC 6265 §4.1.2.6]] and supported by all browsers since IE 6, instructs the browser to exclude the cookie from the ''document.cookie'' API. A script running in the page — whether first-party or injected by an XSS attack — cannot read or exfiltrate an HttpOnly cookie.
@@ -43,17 +41,23 @@ PHP's ''session.cookie_samesite'' defaults to an empty string, which emits ''Set
 
 Python, Node.js, and Go do not provide built-in session handling at the standard-library level; their defaults are determined entirely by third-party libraries. Java, .NET, and Ruby each provide session handling at the platform or interface layer and offer a direct comparison:
 
-^ Platform                  ^ Session cookie          ^ HttpOnly default ^ SameSite default ^
-| PHP                       | ''PHPSESSID''           | ''0'' (off)      | not set          |
-| Java (Tomcat 10)          | ''JSESSIONID''          | ''true''         | not set          |
-| ASP.NET Core (3.1+)       | ''.AspNetCore.Session'' | ''true''         | ''Lax''          |
-| Ruby (Rack)               | ''rack.session''        | ''true''         | not set          |
+^ Platform                                                                                                                                            ^ Session cookie          ^ HttpOnly default ^ SameSite default ^
+| [[https://www.php.net/manual/en/session.security.ini.php|PHP]]                                                                                     | ''PHPSESSID''           | ''0'' (off)      | not set          |
+| [[https://tomcat.apache.org/tomcat-10.1-doc/config/context.html#Common_Attributes|Java (Tomcat 10)]]                                               | ''JSESSIONID''          | ''true''         | not set          |
+| [[https://learn.microsoft.com/en-us/dotnet/api/system.web.httpcookie.httponly|.NET Framework (System.Web)]]                                        | ''ASP.NET_SessionId''   | ''true''         | not set          |
+| [[https://learn.microsoft.com/en-us/aspnet/core/fundamentals/app-state#configure-session-options|ASP.NET Core (3.1+)]]                             | ''.AspNetCore.Session'' | ''true''         | ''Lax''          |
+| [[https://github.com/rack/rack/blob/main/lib/rack/session/abstract/id.rb|Ruby (Rack)]]                                                             | ''rack.session''        | ''true''         | not set          |
+| [[https://docs.djangoproject.com/en/stable/ref/settings/#session-cookie-httponly|Python (Django)]]                                                 | ''sessionid''           | ''true''         | ''Lax''          |
+| [[https://github.com/expressjs/session#cookiehttponly|Node.js (express-session)]]                                                                  | ''connect.sid''         | ''true''         | not set          |
+| [[https://pkg.go.dev/github.com/gorilla/sessions#Options|Go (gorilla/sessions)]]                                                                   | configurable            | ''true''         | not set          |
+| [[https://github.com/laravel/laravel/blob/master/config/session.php|PHP (Laravel)]]                                                                | ''laravel_session''     | ''true''         | ''Lax''          |
+| [[https://symfony.com/doc/current/reference/configuration/framework.html#cookie-httponly|PHP (Symfony)]]                                           | ''PHPSESSID''           | ''true''         | ''Lax''          |
 
-The Servlet 3.0 specification (December 2009) introduced the ''SessionCookieConfig'' API but left the HttpOnly default implementation-defined. Tomcat, the dominant reference container, chose ''useHttpOnly=true'' as its default. ASP.NET Core added stable ''SameSite=Lax'' defaults for session and authentication cookies in version 3.1 (December 2019), following earlier attempts in 2.0 that were partially rolled back due to browser compatibility issues. Rack, the universal Ruby web interface layer, has defaulted to ''httponly: true'' since the option was introduced but does not set a SameSite attribute by default.
+[[https://learn.microsoft.com/en-us/aspnet/core/fundamentals/app-state#configure-session-options|ASP.NET Core]] added stable ''SameSite=Lax'' defaults for session and authentication cookies in version 3.1 (December 2019), following earlier attempts in 2.0 that were partially rolled back due to browser compatibility issues. [[https://github.com/rack/rack/blob/main/lib/rack/session/abstract/id.rb|Rack]], the universal Ruby web interface layer, has defaulted to ''httponly: true'' since the option was introduced but does not set a SameSite attribute by default.
 
-PHP is the only platform in this group where ''HttpOnly'' is off by default. For SameSite, PHP and Rack are both without a default, while ASP.NET Core explicitly sets ''Lax''.
+PHP is the only platform in this group where ''HttpOnly'' is off by default. For SameSite, PHP, Rack, express-session, and gorilla/sessions are all without a default, while ASP.NET Core and Django explicitly set ''Lax''.
 
-It is also worth noting that the two most widely used PHP frameworks — Laravel and Symfony — both override these PHP-level defaults and ship with ''HttpOnly=true'' and ''SameSite=lax''. This indicates broad consensus within the PHP ecosystem that the built-in defaults are insufficient, and that application developers are currently required to compensate for them.
+It is also worth noting that the two most widely used PHP frameworks — [[https://github.com/laravel/laravel/blob/master/config/session.php|Laravel]] and [[https://symfony.com/doc/current/reference/configuration/framework.html#cookie-httponly|Symfony]] — both override these PHP-level defaults and ship with ''HttpOnly=true'' and ''SameSite=lax''. This indicates broad consensus within the PHP ecosystem that the built-in defaults are insufficient, and that application developers are currently required to compensate for them.
 
 ===== Proposal =====
 
@@ -86,15 +90,21 @@ Applications that rely on cross-site POST carrying the session cookie — for ex
 
 As noted above, Chrome and Firefox already apply ''Lax'' as the implicit default for cookies sent without a ''SameSite'' attribute. Applications running on those browsers are already subject to this behaviour; the change makes it explicit and consistent across all browsers and PHP versions.
 
+==== Browser support ====
+
+The ''SameSite'' cookie attribute is supported across all modern browsers:
+
+^ Browser   ^ SameSite support since ^ Lax-by-default since ^ Reference ^
+| Chrome    | 51 (May 2016)          | [[https://www.chromium.org/updates/same-site/|80 (February 2020)]] | [[https://developer.chrome.com/blog/samesite-cookies-explained|Chrome blog]] |
+| Firefox   | 60 (May 2018)          | [[https://groups.google.com/g/mozilla.dev.platform/c/nx2uP0CzA9k|103 (August 2022)]] | [[https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#samesitesamesite-value|MDN]] |
+| Safari    | 12.1 (March 2019)      | not applied            | [[https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/|WebKit blog]] |
+| Edge      | 18 (October 2018)      | [[https://learn.microsoft.com/en-us/microsoft-edge/web-platform/site-impacting-changes|85 (August 2020)]] | [[https://learn.microsoft.com/en-us/microsoft-edge/web-platform/site-impacting-changes|Edge docs]] |
+
+Safari supports the attribute and respects an explicit ''SameSite=Lax'' value but does not apply Lax as an implicit default for cookies lacking the attribute. Setting the attribute explicitly in PHP therefore closes the cross-browser gap and removes reliance on per-browser inference.
+
 ===== Proposed PHP Versions =====
 
 PHP 8.6.
-
-===== Unaffected Functionality =====
-
-  * ''session.cookie_secure'' remains ''0''. Defaulting to ''1'' would prevent session cookies from being sent over HTTP, breaking local development environments. This should be set to ''1'' in production php.ini configuration.
-  * ''session.use_only_cookies'' remains ''1'' (already the secure default since PHP 5.3.0).
-  * No changes to session serialisation, save handlers, or the session module API.
 
 ===== Vote =====
 
