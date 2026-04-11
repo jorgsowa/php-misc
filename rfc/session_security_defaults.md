@@ -106,11 +106,28 @@ PHP 8.6.
 
 ===== Vote =====
 
-As per the [[https://wiki.php.net/rfc/voting|voting RFC]], a Yes/No vote with a 2/3 majority is required for each item. Each change is voted on separately so that the internals list can accept a subset.
+As per the [[https://wiki.php.net/rfc/voting|voting RFC]], each change requires a 2/3 majority to pass. Each ini setting is voted on independently so that the internals list can accept a subset of the proposal.
 
-  - Change ''session.use_strict_mode'' default to ''1'': Yes / No
-  - Change ''session.cookie_httponly'' default to ''1'': Yes / No
-  - Change ''session.cookie_samesite'' default to ''Lax'': Yes / No
+**Change ''session.use_strict_mode'' default from ''0'' to ''1''**
+
+<doodle title="Change session.use_strict_mode default to 1?" auth="jorgsowa" voteType="single" closed="false">
+   * Yes
+   * No
+</doodle>
+
+**Change ''session.cookie_httponly'' default from ''0'' to ''1''**
+
+<doodle title="Change session.cookie_httponly default to 1?" auth="jorgsowa" voteType="single" closed="false">
+   * Yes
+   * No
+</doodle>
+
+**Change ''session.cookie_samesite'' default from '''' to ''Lax''**
+
+<doodle title="Change session.cookie_samesite default to Lax?" auth="jorgsowa" voteType="single" closed="false">
+   * Yes
+   * No
+</doodle>
 
 ===== Implementation =====
 
